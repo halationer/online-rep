@@ -1,0 +1,72 @@
+#wrap {
+	position: relative;
+	height: 455px;
+	width: 980px;
+	background-color: pink;
+	margin-left: 220px;
+	margin-top: 10px;
+	border: 1px solid #000000;
+}
+
+
+#wrap>div {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#wrap>#btn {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	z-index: 1;
+}
+
+#wrap>#btn>li {
+	width: 30px;
+	height: 30px;
+	background: #AA0000;
+	list-style: none;
+	float: left;
+	margin-left: 15px;
+	opacity: 0.6;
+	border-radius: 15px;
+	border: 3px solid #555555;
+	box-sizing: border-box;
+}
+
+#wrap>#btn>li:hover {
+	background: #00FF00;
+}
+
+.recom {
+	height: 163px;
+	background-color: pink;
+	margin-top: 12px;
+}
+
+.recom_hd {
+	float: left;
+	height: 163px;
+	width: 200px;
+	
+}
+.recom_hd img {
+	width: 100%;
+	height: 100%;
+}
+.recom_bd {
+	float: left;
+	
+}
+.recom_bd ul li {
+	float: left;
+	height: 163px;
+	width: 200px;
+}
+.recom_bd ul li img {
+	width: 100%;
+	height: 100%;
+}
