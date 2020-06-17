@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/shopping/dao/IUserServiceDao.java=UTF-8
+encoding//src/main/java/com/shopping/dao/impl/UserServiceDaoImpl.java=UTF-8
+encoding//src/main/java/com/shopping/filter/AccessFilter.java=UTF-8
+encoding//src/main/java/com/shopping/filter/EncodingFilter.java=UTF-8
+encoding//src/main/java/com/shopping/util/DBUtil.java=UTF-8
