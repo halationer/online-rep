@@ -1,209 +1,197 @@
 package com.shopping.service.impl;
 
 import java.util.List;
+import java.util.UUID;
+
 import com.shopping.common.ServerResponse;
 import com.shopping.common.UserInfo;
 import com.shopping.common.UserTable;
-import com.shopping.dao.IUserServiceDao;
-import com.shopping.dao.impl.UserServiceDaoImpl;
+import com.shopping.dao.IUserDao;
+import com.shopping.dao.impl.UserDaoImpl;
 import com.shopping.service.IUserService;
 
 public class UserServiceImpl implements IUserService {
 	
-	private static IUserServiceDao userDao = new UserServiceDaoImpl();
+	private static IUserDao userDao = new UserDaoImpl();
 	
 	public ServerResponse loginLogic(String username, String password) {
 		if(username==null||username.equals(""))
 		{
-			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»ÄÜÎª¿Õ");
+			return ServerResponse.serverResponseByError("ç”¨æˆ·åä¸èƒ½ä¸ºç©º");
 		}
 		if(password==null||password.equals(""))
 		{
-			return ServerResponse.serverResponseByError("ÃÜÂë²»ÄÜÎª¿Õ");
+			return ServerResponse.serverResponseByError("å¯†ç ä¸èƒ½ä¸ºç©º");
 		}
-		boolean result = userDao.checkUsername(username);
-		if(!result)
+		
+		if(!userDao.checkUsername(username))
 		{
-			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»´æÔÚ");
+			return ServerResponse.serverResponseByError("ç”¨æˆ·åä¸å­˜åœ¨");
 		}
-		return ServerResponse.serverResponseBySuccess("µÇÂ¼³É¹¦");
+		else {
+			if (userDao.selectUserByUsernameandPassword(username, password)) {
+				UserInfo userInfo=userDao.selectUserInfoByUsername(username);
+				return ServerResponse.serverResponseBySuccess(userInfo);
+			}
+			return ServerResponse.serverResponseByError("å¯†ç é”™è¯¯");
+		}
+	}
+	public ServerResponse registerLogic(UserInfo userInfo)
+	{
+		if(userInfo==null)
+		{
+			return ServerResponse.serverResponseByError("å‚æ•°å¿…é¡»");
+		}
+		if(userDao.checkUsername(userInfo.getUsername()))
+		{
+			return ServerResponse.serverResponseByError("ç”¨æˆ·åå·²å­˜åœ¨");
+			
+		}
+		if(userDao.checkEmail(userInfo.getEmail()))
+		{
+			return ServerResponse.serverResponseByError("é‚®ç®±å·²å­˜åœ¨");
+			
+		}
+		if (userDao.insertUserInfo(userInfo)) {
+			return ServerResponse.serverResponseBySuccess("æ³¨å†ŒæˆåŠŸ");
+		}
+		return ServerResponse.serverResponseBySuccess("æ³¨å†Œå¤±è´¥");
+		
+	}
+	public ServerResponse get_user_infoLogic(String username) 
+	{
+		if(username == null || username.equals(""))
+			return ServerResponse.serverResponseByError("ç”¨æˆ·æœªç™»å½•ï¼Œæ— æ³•è·å–å½“å‰ç”¨æˆ·ä¿¡æ¯ã€‚");
+		UserInfo userInfo=userDao.selectUserInfoByUsername(username);
+		return ServerResponse.serverResponseBySuccess(userInfo);
+	}
+	public ServerResponse forget_return_questionLogic(String username) 
+	{
+		if(username==null||username.equals(""))
+		{
+			return ServerResponse.serverResponseByError("ç”¨æˆ·åä¸èƒ½ä¸ºç©º");
+		}
+		
+		if(!userDao.checkUsername(username))
+		{
+			return ServerResponse.serverResponseByError("ç”¨æˆ·åä¸å­˜åœ¨,è¯·é‡æ–°è¾“å…¥");
+		}
+		
+		String question=userDao.selectQuestionByUsername(username);
+		if (question==null||question.equals("")) {
+			return ServerResponse.serverResponseBySuccess("å¯†ä¿é—®é¢˜ç©º");
+		}
+		return ServerResponse.serverResponseBySuccess(question);
+	}
+	public ServerResponse forget_check_answerLogic(String username, String question,String answer)
+	{
+		if(username==null||username.equals(""))
+		{
+			return ServerResponse.serverResponseByError("ç”¨æˆ·åä¸èƒ½ä¸ºç©º");
+		}
+		if(question==null||question.equals(""))
+		{
+			return ServerResponse.serverResponseByError("é—®é¢˜ä¸èƒ½ä¸ºç©º");
+		}
+		if(answer==null||answer.equals(""))
+		{
+			return ServerResponse.serverResponseByError("ç­”æ¡ˆä¸èƒ½ä¸ºç©º");
+		}
+		if(!userDao.selectAnswerByUsername(username).equals(answer))
+		{
+			return ServerResponse.serverResponseByError("ç­”æ¡ˆé”™è¯¯");
+		}
+		String forgetToken=UUID.randomUUID().toString();
+		return ServerResponse.serverResponseBySuccess(forgetToken);
+	}
+	public ServerResponse forget_reset_passwordLogic(String username, String passwordnew)
+	{
+		if(username==null||username.equals(""))
+		{
+			return ServerResponse.serverResponseByError("ç”¨æˆ·åä¸èƒ½ä¸ºç©º");
+		}
+		
+		if(passwordnew==null||passwordnew.equals(""))
+		{
+			return ServerResponse.serverResponseByError("å¯†ç ä¸èƒ½ä¸ºç©º");
+		}
+		if(!userDao.updatePasswordByUsername(username,passwordnew))
+		{
+			return ServerResponse.serverResponseByError("å¯†ç ä¿®æ”¹å¤±è´¥");
+		}
+		return ServerResponse.serverResponseBySuccess("ä¿®æ”¹å¯†ç é”™è¯¯");
+	}
+
+	public ServerResponse login_replace_password(String username,String passwordOld, String passwordNew) {
+		// TODO Auto-generated method stub
+		if(passwordOld==null||passwordOld.equals(""))
+		{
+			return ServerResponse.serverResponseByError("æ—§å¯†ç ä¸èƒ½ä¸ºç©º");
+		}
+		else if(passwordOld!=userDao.checkPassword(username)) {//æ—§çš„å¯†ç è¾“å…¥ä¸æ­£ç¡®
+			return ServerResponse.serverResponseByError("æ—§å¯†ç ä¸æ­£ç¡®");
+		}
+		else if(passwordNew==null||passwordNew.equals(""))
+		{
+			return ServerResponse.serverResponseByError("æ–°å¯†ç ä¸èƒ½ä¸ºç©º");
+		}
+		
+		return ServerResponse.serverResponseBySuccess("å¯†ç ä¿®æ”¹æˆåŠŸ");
+		//return null;
+	}
+	public ServerResponse login_renew_information(String email, String phone, String question, String answer) {
+		// TODO Auto-generated method stub
+		if(email==null||email.equals(""))
+		{
+			return ServerResponse.serverResponseByError("é‚®ç®±ä¸èƒ½ä¸ºç©º");
+		}
+		else if(phone==null||phone.equals(""))
+		{
+			return ServerResponse.serverResponseByError("ç”µè¯å·ä¸èƒ½ä¸ºç©º");
+		}
+		else if(question==null||question.equals(""))
+		{
+			return ServerResponse.serverResponseByError("é—®é¢˜ä¸èƒ½ä¸ºç©º");
+		}
+		else if(answer==null||answer.equals(""))
+		{
+			return ServerResponse.serverResponseByError("é—®é¢˜ç­”æ¡ˆä¸èƒ½ä¸ºç©º");
+		}
+		else {
+			return ServerResponse.serverResponseBySuccess("ä¿¡æ¯æ›´æ–°æˆåŠŸ");
+		}
 	
 	}
-//	public ServerResponse registerLogic(UserInfo userInfo) 
-//	{
-//		if(userInfo==null)
-//		{
-//			return ServerResponse.serverResponseByError("²ÎÊı±ØĞë");
-//		}
-//		boolean result = userDao.checkUsername(userInfo.getUsername());
-//		if(result)
-//		{
-//			return ServerResponse.serverResponseByError("ÓÃ»§ÃûÒÑ´æÔÚ");
-//			
-//		}
-//		boolean result_email = userDao.checkEmail(userInfo.getEmail());
-//		if(result)
-//		{
-//			return ServerResponse.serverResponseByError("ÓÊÏäÒÑ´æÔÚ");
-//			
-//		}
-//		int count = UserDao.insert(UserInfo);
-//		if (count>0) {
-//			return ServerResponse.serverResponseBySuccess("×¢²á³É¹¦");
-//		}
-//		return ServerResponse.serverResponseBySuccess("×¢²áÊ§°Ü");
-//	}
-//	public ServerResponse getUserInfoLogic(String username) 
-//	{
-//		UserInfo userInfo=userDao.selectUserInfoByUsername(username);
-//		return ServerResponse.serverResponseBySuccess(userInfo);
-//	}
-//	public ServerResponse forget_return_questionLogic(String username) 
-//	{
-//		if(username==null||username.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»ÄÜÎª¿Õ");
-//		}
-//		int result =userDao.checkUsername(username);
-//		if(result==0)
-//		{
-//			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»´æÔÚ,ÇëÖØĞÂÊäÈë");
-//		}
-//		
-//		String question=userDao.selectQuestionInfoByUsername(username);
-//		if (question==null||question.equals("")) {
-//			return ServerResponse.serverResponseBySuccess("ÃÜ±£ÎÊÌâ¿Õ");
-//			
-//		}
-//		return ServerResponse.serverResponseBySuccess(question);
-//	}
-//	public ServerResponse forget_check_answerLogic(String username, String question,String answer)
-//	{
-//		if(username==null||username.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»ÄÜÎª¿Õ");
-//		}
-//		if(question==null||question.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ÎÊÌâ²»ÄÜÎª¿Õ");
-//		}
-//		if(answer==null||answer.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("´ğ°¸²»ÄÜÎª¿Õ");
-//		}
-//		
-//		int result =userDao.selectByUsernameAndQuestionAndAnswer(username,question,answer);
-//		if(result==0)
-//		{
-//			return ServerResponse.serverResponseByError("´ğ°¸´íÎó");
-//		}
-//		String forgetToken=UUID.randomUUID().toString();
-//		
-//		return ServerResponse.serverResponseBySuccess(forgetToken);
-//	}
-//	public ServerResponse forget_reset_passwordLogic(String username, String passwordnew)
-//	{
-//		if(username==null||username.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»ÄÜÎª¿Õ");
-//		}
-//		
-//		if(passwordnew==null||passwordnew.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ÃÜÂë²»ÄÜÎª¿Õ");
-//		}
-//		
-//		int result =userDao.updateUserPassword(username,passwordnew);
-//		if(result==0)
-//		{
-//			return ServerResponse.serverResponseByError("ÃÜÂëĞŞ¸ÄÊ§°Ü");
-//		}
-//		
-//		return ServerResponse.serverResponseBySuccess();
-//	}
-//	public ServerResponse forgrt_replace_password(String username, String passwordNew, String forgetToken) {
-//		// TODO Auto-generated method stub
-//		//return null;
-//		if(username==null||username.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»ÄÜÎª¿Õ");
-//		}
-//		if(forgetToken==null||forgetToken.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("¾ÉÃÜÂë²»ÄÜÎª¿Õ");
-//		}
-//		if(passwordNew==null||passwordNew.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ĞÂÃÜÂë²»ÄÜÎª¿Õ");
-//		}
-//		int result =userDao.checkUsername(username);
-//		if(result==0)
-//		{
-//			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»´æÔÚ");
-//		}
-//		return ServerResponse.serverResponseBySuccess("ÃÜÂëĞŞ¸Ä³É¹¦");
-//	}
-//	public ServerResponse login_replace_password(String passwordOld, String passwordNew) {
-//		// TODO Auto-generated method stub
-//		if(passwordOld==null||passwordOld.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("¾ÉÃÜÂë²»ÄÜÎª¿Õ");
-//		}
-//		if(passwordNew==null||passwordNew.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ĞÂÃÜÂë²»ÄÜÎª¿Õ");
-//		}
-//		
-//		return ServerResponse.serverResponseBySuccess("ÃÜÂëĞŞ¸Ä³É¹¦");
-//		//return null;
-//	}
-//	public ServerResponse login_renew_information(String email, String phone, String question, String answer) {
-//		// TODO Auto-generated method stub
-//		if(email==null||email.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ÓÊÏä²»ÄÜÎª¿Õ");
-//		}
-//		if(phone==null||phone.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("µç»°ºÅ²»ÄÜÎª¿Õ");
-//		}
-//		if(answer==null||answer.equals(""))
-//		{
-//			return ServerResponse.serverResponseByError("ÎÊÌâ´ğ°¸²»ÄÜÎª¿Õ");
-//		}
-//		int email =userDao.checkUsername(email);
-//		int phone =userDao.checkUsername(phone);
-//		
-//		if(email==0)
-//		{
-//			return ServerResponse.serverResponseByError("ÓÊÏä²»´æÔÚ");
-//		}
-//		if(phone==0)
-//		{
-//			return ServerResponse.serverResponseByError("µç»°ºÅ²»´æÔÚ");
-//		}
-//		return ServerResponse.serverResponseBySuccess("ĞÅÏ¢¸üĞÂ³É¹¦");
-//		
-//		//return null;
-//	}
-//	public ServerResponse login_force(String username) {
-//		// TODO Auto-generated method stub
-//		return ServerResponse.serverResponseBySuccess("ĞÅÏ¢»ñÈ¡³É¹¦");
-//		//return null;
-//	}
-//	public ServerResponse exit_login() {
-//		// TODO Auto-generated method stub
-//		return ServerResponse.serverResponseBySuccess("³É¹¦ÍË³ö");
-//		//return null;
-//	}
+	public ServerResponse login_force(String username) {
+		// TODO Auto-generated method stub
+		if(username == null || username.equals("")) {
+			return ServerResponse.serverResponseByError(10,"ç”¨æˆ·æœªç™»å½•ï¼Œæ— æ³•è·å–å½“å‰ç”¨æˆ·ä¿¡æ¯,å¼ºåˆ¶é€€å‡º");
+		}
+		else {
+			UserInfo user = userDao.selectUserInfo(username);
+			return ServerResponse.serverResponseBySuccess(user);
+			//return null;
+		}
+		
+	}
+	public ServerResponse exit_login(String username) {
+		// TODO Auto-generated method stub
+		//return ServerResponse.serverResponseBySuccess("æˆåŠŸé€€å‡º");
+		//return null;
+		if(username == null || username.equals("")){
+			return ServerResponse.serverResponseByError("æœåŠ¡ç«¯å¼‚å¸¸");
+		}else{
+			return ServerResponse.serverResponseBySuccess("é€€å‡ºæˆåŠŸ");
+		} 
+	}
 	
 	public ServerResponse mLoginLogic(String username, String password)
 	{
-		List<UserTable> user = new UserServiceDaoImpl().checkAdmin(username, password);
+		List<UserTable> user = new UserDaoImpl().checkAdmin(username, password);
 		if(user.size() == 0)
 		{
 			System.out.println("userServiceImpl fail");
-			return ServerResponse.serverResponseByError("ÓÃ»§Ãû²»´æÔÚ»òÃÜÂë²»ÕıÈ·");
+			return ServerResponse.serverResponseByError("ç”¨æˆ·åä¸å­˜åœ¨æˆ–å¯†ç ä¸æ­£ç¡®");
 		}
 		else
 		{
@@ -212,55 +200,19 @@ public class UserServiceImpl implements IUserService {
 			return ServerResponse.serverResponseBySuccess(iuser);
 		}
 	}
-	
-	@Override
-	public ServerResponse registerLogic(UserInfo userInfo) {
-		// TODO Auto-generated method stub
-		return null;
+	public ServerResponse mUserListLogic(boolean onlog, boolean access)
+	{
+		if(!onlog)
+			return ServerResponse.serverResponseByError(10, "ç”¨æˆ·æœªç™»å½•,è¯·ç™»å½•");
+		else if(!access)
+			return ServerResponse.serverResponseByError("æ²¡æœ‰æƒé™");
+		else 
+		{
+			List<UserTable> userlist = new UserDaoImpl().getUserList();
+			return ServerResponse.serverResponseBySuccess(userlist);
+		}
 	}
-	@Override
-	public ServerResponse getUserInfoLogic(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ServerResponse forget_return_questionLogic(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ServerResponse forget_check_answerLogic(String username, String question, String answer) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ServerResponse forget_reset_passwordLogic(String username, String passwordnew) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ServerResponse forgrt_replace_password(String username, String passwordNew, String forgetToken) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ServerResponse login_replace_password(String passwordOld, String passwordNew) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ServerResponse login_renew_information(String email, String phone, String question, String answer) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ServerResponse login_force(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public ServerResponse exit_login() {
-		// TODO Auto-generated method stub
-		return null;
+	public ServerResponse mExitLogic(String admin) {
+		return exit_login(admin);
 	}
 }

@@ -72,8 +72,7 @@
                 box-sizing: border-box;
                 padding: 0 5px;
             }
-            #exit:link,#exit:visited{
-                display: block;
+            #exit{
                 background-color: #ff6347;
                 border-radius: 20px;
                 width: 85px;
@@ -84,10 +83,10 @@
                 position: absolute;
                 right: 30px;
                 top: 25px;
-	            text-decoration:none;
             }
             #exit:hover{
                 background-color: #bb2d14;
+                cursor: pointer;
             }
             #left>ul{
                 width: 100%;
@@ -95,25 +94,21 @@
             }
             #left>ul>li{
                 width: 100%;
+                height: 80px;
                 border-bottom: solid 1px #00000030;
-                text-align: center;
-                display: inline-block;
-            }
-            #left a:link, #left a:visited{
-            	display: block;
-            	width: 100%;
-            	height: 100%;
-	            text-decoration:none;
-                padding: 20px 0;
-                color: black;
+                display: flex;
+                align-items: center;
+				padding: 0 30%;
                 font-weight: bold;
             }
-            #left a:hover{
+            #left li:hover{
                 background: #e4e4e4;
+                cursor: pointer;
             }
             #right th, #right td{
-                min-width: 90px;
+                font-size: 15px;
                 text-align: center;
+                vertical-align: middle;
             }
             .btn:focus,.btn:active:focus,
             .btn.active:focus,.btn.focus,
@@ -123,14 +118,12 @@
             }
             #right #but{
                 min-width: 120px;
-                display: flex;
             }
             #right #but>.btn{
-                margin-right: 5px;
-                min-width: 60px;
-            }
-            .final{
-                float: right;
+                margin: 5px;
+                width: 50px;
+                height: 30px;
+                font-size: 15px;
             }
             #page{
                 display: flex;
@@ -142,10 +135,141 @@
     </head>
     <body>
     	<script>
-    		console.log('${param.admin}')
-            let admin = jQuery.parseJSON('${sessionScope.admin}')
+    		let titlemap = {
+    				'id' : '编号',
+    				'username':'用户名',
+    				'password':'密码',
+    				'phone':'手机',
+    				'email':'邮箱',
+    				'role':'权限',
+    				'question':'密保问题',
+    				'answer':'密保答案',
+    				'createTime':'创建时间',
+    				'updateTime':'更新时间',
+    		}
+    		let admin = {'username':'未登录'}
+    		if( ${!empty admin} )
+            	admin = jQuery.parseJSON('${admin}')
+            else
+            	$(location).attr('href', '../layindex.jsp')
     		$(function(){
+
+                //接收参数
                 $('#adminname').text(admin['username'])
+
+                //设置响应
+                $('#exit').click(function(){
+                	$.ajax({
+            			type: "post",
+            			url: "../manage/user?type=exit", //对应url
+            			dataType: "json",
+            			success: function(res){
+                            console.log(res.msg)
+							var url = "../layindex.jsp"
+							window.location.href = url
+            			},
+            			error: function(err){
+            				console.log("err")
+            				console.log(err)
+            			}
+            		})
+            	})
+                $('#user-manage').click(function(){
+            		$.ajax({
+            			type: "post",
+            			url: "../manage/user?type=list", //对应url
+            			dataType: "json",
+            			success: function(res){
+            				if(res.status === 0){
+                                console.log(res.data)
+                            	$('thead>tr').empty()
+                            	$('tbody').empty()
+                                makeThead(res)
+                                makeTbody(res)
+                                makeNavigatePages("user", res)
+							}
+            				else{
+            					console.log(res.msg)
+            				}
+            			},
+            			error: function(err){
+            				console.log("err")
+            				console.log(err)
+            			}
+            		})
+            	})
+				
+            	function makeThead(res){
+                	const example = res.data.list[0]
+                    $.each(example, function(key,val){
+                        let th = $('<th scope="col"></th>')
+                        th.appendTo($('thead>tr')).text(titlemap[key])
+                    })
+                    let but = $("<td id = 'but'>\
+                        <button type='button' class='btn btn-info btn-sm' id='b-btn'>添加</button>\
+                        <button type='button' class='btn btn-success btn-sm' id='b-btn'>保存</button>\
+                        </td>\
+                    ").appendTo($('thead>tr'))
+                }
+                function makeTbody(res){
+                	const list = res.data.list
+                    for(let i=res.data.startRow-1; i<res.data.endRow; i++)
+                    {
+                        let tr = $('<tr></tr>').appendTo('tbody')
+                        const example = res.data.list[i]
+                        $.each(example, function(key,val){
+                            let td = $('<td></td>')
+                            td.appendTo(tr).text(val)
+                        })
+                        let but = $("<td id = 'but'>\
+                            <button type='button' class='btn btn-primary btn-sm'>修改</button>\
+                            <button type='button' class='btn btn-danger btn-sm'>删除</button></td>\
+                        ").appendTo(tr)
+                    }
+                }
+                function makeNavigatePages(table, res){
+                    const page = res.data
+                    let tr = $('<tr></tr>').appendTo('tbody')
+                    let td = $('<td colspan = "'+(Object.keys(page.list[0]).length+1)+'"></td>').appendTo(tr)
+                    let bg = $('<div class="btn-group"></div>').appendTo(td)
+                    newbutton().appendTo(bg).text("首页").click(function(){onnavigateclick(table,page.firstPage)})
+                    newbutton().appendTo(bg).text("上一页").click(function(){onnavigateclick(table,page.prePage)})
+                    const navigate = page.navigatepageNums
+                    for(let i=0; i<navigate.length; i++)
+                    {
+                    	newbutton().appendTo(bg).text(navigate[i]).click(function(){onnavigateclick(table,navigate[i])})
+                    }
+                    newbutton().appendTo(bg).text("下一页").click(function(){onnavigateclick(table,page.nextPage)})
+                    newbutton().appendTo(bg).text("尾页").click(function(){onnavigateclick(table,page.lastPage)})
+                }
+                function newbutton()
+                {
+                	return $('<button class="btn btn-outline-primary"></button>')
+                }
+                function onnavigateclick(table, pagenum){
+                	$.ajax({
+            			type: "post",
+            			url: "../manage/"+table+"?type=list&pageNum="+pagenum, //对应url
+            			dataType: "json",
+            			success: function(res){
+            				if(res.status === 0){
+                                console.log(res.data)
+                            	$('thead>tr').empty()
+                            	$('tbody').empty()
+                                makeThead(res)
+                                makeTbody(res)
+                                makeNavigatePages("user", res)
+							}
+            				else{
+            					console.log(res.msg)
+            				}
+            			},
+            			error: function(err){
+            				console.log("err")
+            				console.log(err)
+            			}
+            		})
+                }
             })
     	</script>
     	<div id='top'>
@@ -154,67 +278,21 @@
                 <div id='text'>当前用户：</div>
                 <div id='adminname'></div>
             </div>
-            <a id='exit' href='../index.jsp'>退出登录</a>
+            <div id='exit'>退出登录</div>
         </div>
         <div id='bottom'>
             <div id='left'>
                 <ul>
-                    <li><a href='../manage/user?type=list'>用户管理</a></li>
-                    <li><a href='#'>商品管理</a></li>
-                    <li><a href='#'>类别管理</a></li>
-                    <li><a href='#'>订单管理</a></li>
+                    <li id="user-manage">用户管理</li>
+                    <li>商品管理</li>
+                    <li>类别管理</li>
+                    <li>订单管理</li>
                 </ul>
             </div>
             <div id='right'>
                 <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">编号</th>
-                            <th scope="col">用户名</th>
-                            <th scope="col">密码</th>
-                            <th scope="col">邮箱</th>
-                            <th scope="col">手机</th>
-                            <th scope="col">密保问题</th>
-                            <th scope="col">密保答案</th>
-                            <th scope="col">权限</th>
-                            <th scope="col">创建时间</th>
-                            <th scope="col">修改时间</th>
-                            <td id = 'but'>
-                                <button type="button" class="btn btn-info btn-sm" id='b-btn'>添加</button>
-                                <button type="button" class="btn btn-success btn-sm" id='b-btn'>保存</button>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td id = 'but'>
-                                <button type="button" class="btn btn-primary btn-sm">修改</button>
-                                <button type="button" class="btn btn-danger btn-sm">删除</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan = "11">
-                                <div class="btn-group">
-                                    <button class="btn btn-outline-primary">首页</button>
-                                    <button class="btn btn-outline-primary">1</button>
-                                    <button class="btn btn-outline-primary">2</button>
-                                    <button class="btn btn-outline-primary">3</button>
-                                    <button class="btn btn-outline-primary">...</button>
-                                    <button class="btn btn-outline-primary">尾页</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <thead><tr></tr></thead>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>

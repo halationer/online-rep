@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBUtil {
-	private static final String URL  ="jdbc:mysql://localhost:3306/pro" ;
+	private static final String URL  ="jdbc:mysql://localhost:3306/shopping?useUnicode=true&characterEncoding=utf8";
 	private static final String USERNAME  ="root" ;
 	private static final String PASSWORD  ="123456" ;
 	public static PreparedStatement pstmt = null ;
