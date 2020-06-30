@@ -1,0 +1,118 @@
+/*悬浮窗口*/
+			.shadow_css {
+			display: none;
+			position: absolute;
+			top: 0%;
+			left: 0%;
+			width: 100%;
+			height: 100%;
+			background-color: black;
+			z-index: 10;
+			/* 为mozilla firefox 设置透明度  */
+			-moz-opacity: 0.6;
+			/* 设置透明度 */
+			opacity: .60;
+			/* 为IE 设置透明度  */
+			filter: alpha(opacity=66);
+			}			
+			/*更换密码弹窗*/
+			.tanmima{
+				display: none;
+				width:420px;
+				height: 500px;
+				position: absolute;
+				left: 50%;
+				top:18%;
+/*				margin-top: 30px;*/
+                transform: translateX(-50%);
+				background-color:floralwhite;
+				cursor: pointer;
+
+
+			}
+			/*更换邮箱弹窗*/
+			.tanyouxiang{
+				display: none;
+				width:416px;
+				height: 315px;
+				position: absolute;
+				left: 50%;
+				top:18%;
+/*				margin-top: 30px;*/
+                transform: translateX(-50%);
+				background-color:floralwhite;
+				cursor: pointer;
+			}
+			/*更换手机弹窗*/
+			.tanshouji{
+				display: none;
+				width:416px;
+				height: 315px;
+				position: absolute;
+				left: 50%;
+				top:18%;
+/*				margin-top: 30px;*/
+                transform: translateX(-50%);
+				background-color:floralwhite;
+				cursor: pointer;
+			}
+			
+			/*更换密保弹窗*/
+			.tanmibao{
+				display: none;
+				width:416px;
+				height: 500px;
+				position: absolute;
+				left: 50%;
+				top:18%;
+/*				margin-top: 30px;*/
+                transform: translateX(-50%);
+				background-color:floralwhite;
+				cursor: pointer;
+			}
+			/*更换用户名弹窗*/
+			.tanname{
+				display: none;
+				width:416px;
+				height: 264px;
+				position: absolute;
+				left: 50%;
+				top:18%;
+/*				margin-top: 30px;*/
+                transform: translateX(-50%);
+				background-color:floralwhite;
+				cursor: pointer;
+			}
+			
+			.mod_tip_hd{
+				display:block;
+				margin-top: 10px;
+				margin-left: 10px;
+				width:400px;
+				height:30px;
+				border-bottom:2px,solid,red ;
+			}
+			.guan{
+				margin-top: -27px;
+				margin-left: 300px;
+				float:right;
+				
+			}
+			.mod_main{
+				padding:18px 0;padding-left:40px;
+				margin-left: 10px;
+			}
+			.username{font:16px Times New Roman;height: 40px;line-height: 40px;margin:20px 0;}
+			.shurukuang{width: 220px;height: 30px;border:1px solid #ccc;padding:5px 10px; }
+			.shurukuang:focus{border: 1px solid blue;background: #F0FFFF;}
+			.yanzhengma{width: 100px;height: 30px;border:1px solid #ccc;padding:5px 10px; }
+			.yanzhengma:focus{border: 1px solid blue;background: #F0FFFF;}
+			.right{margin-left: 20px;}
+			
+			.mimabutton{margin: 50px auto;}
+			.buttonstyle{border:none;width: 100px;height: 37px;margin-left:10px;background:orangered;color:white; font-size: 20px;letter-spacing: 2px;cursor:pointer;border-radius: 4px;}
+			.buttonstyle:hover{border:1px solid #fff;}
+			.buttonstyle2{border:none;width: 100px;height: 37px;margin-right:62px;margin-top:-38px;background:orangered;color: #fff; font-size: 20px;letter-spacing: 2px;cursor:pointer;border-radius: 4px;float: right;}
+			.buttonstyle2:hover{border:1px solid #fff;}
+		
+

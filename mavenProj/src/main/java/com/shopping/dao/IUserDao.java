@@ -22,7 +22,7 @@ public interface IUserDao {
 	//登录中重置密码
 	public boolean loginReplacePassword(UserInfo user);
 	//登录更新个人信息
-	public boolean loginRenewPassword(UserInfo user);
+	public boolean loginRenewUserInfo(UserInfo user);
 	//获取个人全部信息
 	public UserInfo loginForce(UserInfo user);
 	public UserInfo selectUserInfo(String username);

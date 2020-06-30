@@ -179,9 +179,9 @@ public class UserDaoImpl implements IUserDao {
 		try {
 			  String sql = "select password from user_table where username =?" ;
 			  Object[] params = {username} ;
-			  rs = DBUtil.executeQuery(sql,params) ;
+			  rs = DBUtil.executeQuery(sql,params);
 			  if(rs.next()) {
-				 password = rs.getString(1) ;
+				 password = rs.getString(1);
 			  }
 			  return password;
 		} catch (SQLException e) {
@@ -196,17 +196,13 @@ public class UserDaoImpl implements IUserDao {
 		}
 	}
 	public boolean loginReplacePassword(UserInfo user) {//登录中重置
-		// TODO Auto-generated method stub
-		//String sql = "update user_table set password=? where username=?" ;
-		String sql = "update students set password=? where username=?" ;
-		Object[] params = {user.getPassword()};
+		String sql = "update user_table set password=? where username=?";
+		Object[] params = {user.getPassword(), user.getUsername()};
 		return DBUtil.executeUpdate(sql, params) ;
-		//return false;
 	}
-	public boolean loginRenewPassword(UserInfo user) {//登录状态更新个人信息
-		// TODO Auto-generated method stub
-		String sql = "update user_table set name =?,sex=?,age=?,address=?,phonenumber=?,password=? where id=?" ;
-		Object[] params = {user.getEmail(),user.getPhone(),user.getQuestion(),user.getAnswer()};
+	public boolean loginRenewUserInfo(UserInfo user) {//登录状态更新个人信息
+		String sql = "update user_table set email=?,phone=?,position=?,answer=? where username=?";
+		Object[] params = {user.getEmail(),user.getPhone(),user.getQuestion(),user.getAnswer(),user.getUsername()};
 		return DBUtil.executeUpdate(sql, params) ;
 	}
 	public UserInfo loginForce(UserInfo user) {//登录过程获取个人信息

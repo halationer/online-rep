@@ -153,7 +153,7 @@
 					<li><a href="dingdanzhongxin.jsp" >我的订单</a></li>
 					<li><a href="">我的关注</a></li>
 					<li><a href="">我的收藏</a></li>
-					<li><a href="">我的购物车</a></li>
+					<li><a href="gouwuche.jsp">我的购物车</a></li>
 				</ul>
 			</div>
 			<div class="ddzx">个人中心</div>
@@ -179,7 +179,7 @@
 			<div class="subgrzl ml40"><span>登录邮箱</span><span id="email" >287624075@qq.com</span></div>
 			<div class="subgrzl ml40"><span>收货地址</span><span id="address" >浙江省杭州市江干区19号大街571号</span></div>
 			<!-- 设置个人中心为用户名自 -->
-										<script>
+									<script type="text/javascript">
 										
 										$(function(){
 											$.ajax({

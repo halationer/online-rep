@@ -74,7 +74,7 @@
 
             		$.ajax({
             			type: "post",
-            			data: {passwordOld:passwordOld,passwordNew:passwordOld}, //对应request
+            			data: {passwordOld:passwordOld,passwordNew:passwordNew}, //对应request
             			url: "user?type=reset_password", //对应url
             			dataType: "json",
             			success: function(res){
@@ -307,7 +307,7 @@
 	
 	<!-- start banner_x -->
 		<div class="banner_x center">
-			<a href="index.jsp" target="_blank"><div class="logo fl"></div></a>
+			<a href="index.jsp" target="_blank"><div class=" fl"></div></a>
 			<a href=""><div class="ad_top fl"></div></a>
 			<div class="nav fl">
 				<ul>
@@ -346,7 +346,7 @@
 					<li><a href="dingdanzhongxin.jsp" >我的订单</a></li>
 					<li><a href="">我的关注</a></li>
 					<li><a href="">我的收藏</a></li>
-					<li><a href="">我的购物车</a></li>
+					<li><a href="gouwuche.jsp">我的购物车</a></li>
 				</ul>
 			</div>
 			<div class="ddzx">个人中心</div>

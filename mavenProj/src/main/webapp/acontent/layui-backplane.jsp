@@ -63,7 +63,7 @@
                             </a>
                         </li>
                         <li class='layui-nav-item'>
-                            <a href='#'>
+                            <a href='layui-backgoods.jsp'>
                             	<i class='layui-icon layui-icon-app' style='font-size: 18px;'></i>
                             	<span>&nbsp;&nbsp;&nbsp;商品信息</span>
                             </a>

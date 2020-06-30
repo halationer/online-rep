@@ -99,51 +99,7 @@ public class UserServletM extends HttpServlet {
 		
 		if(onlog && access)
 		{
-			//计算分页数据
-			int total = res.getData().size();
-			int pages = (int)Math.ceil((double)total/pagesize);
-			if(pagenum > pages) pagenum = pages;
-			if(pagenum < 1) pagenum = 1;
-			int size = pagenum==pages? total-(pagenum-1)*pagesize : pagesize;
-			System.out.println("servlet get total: " + total);
-			VirtualPage virtualPage = new VirtualPage();
-			virtualPage.setPageNum(pagenum);
-			virtualPage.setPageSize(pagesize);
-			virtualPage.setSize(size);
-			virtualPage.setOrderBy(null);
-			virtualPage.setStartRow((pagenum-1)*pagesize+1);
-			virtualPage.setEndRow(Math.min(pagenum*pagesize, total));
-			virtualPage.setTotal(total);
-			virtualPage.setPages(pages);
-			List<UserTable> usertable = res.getData();
-			ArrayList<UserTable> users = new ArrayList<>();
-			for(int i=virtualPage.getStartRow()-1; i<virtualPage.getEndRow(); i++)
-				users.add(usertable.get(i));
-			virtualPage.setList(users);
-			virtualPage.setFirstPage(1);
-			virtualPage.setPrePage(pagenum-1);
-			virtualPage.setNextPage(pagenum+1);
-			virtualPage.setLastPage(pages);
-			virtualPage.setFirstPage(pagenum==1);
-			virtualPage.setLastPage(pagenum==pages);
-			virtualPage.setHasPreviousPage(pagenum>1);
-			virtualPage.setHasNextPage(pagenum<pages);
-			virtualPage.setNavigatePages(8);
-			ArrayList<Integer> pagenums = new ArrayList<>();
-			int startnav = 1, endnav = pages;
-			if(pages > virtualPage.getNavigatePages())
-			{
-				endnav = virtualPage.getNavigatePages();
-				if(pagenum > (startnav + endnav) / 2)
-				{
-					startnav = pagenum - virtualPage.getNavigatePages() / 2;
-					endnav = startnav + virtualPage.getNavigatePages() - 1;
-				}
-			}
-			for(int i = startnav; i <= endnav; i++)
-				pagenums.add(i);
-			virtualPage.setNavigatepageNums(pagenums);
-			
+			VirtualPage virtualPage = new VirtualPage(res, pagesize, pagenum);
 			pageres = ServerResponse.serverResponseBySuccess(virtualPage);
 		}
 		else

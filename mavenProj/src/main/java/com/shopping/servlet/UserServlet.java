@@ -160,6 +160,7 @@ public class UserServlet extends HttpServlet {
 		String answer=request.getParameter("answer");
 		IUserService userService=new UserServiceImpl();
 		ServerResponse se=userService.forget_check_answerLogic(username,question,answer);
+		request.getSession().setAttribute("forget_check_answer_token", se.getData());
 		Gson gson=new Gson();
 		String json=gson.toJson(se);
 		PrintWriter pw;
@@ -177,10 +178,14 @@ public class UserServlet extends HttpServlet {
 	}
 	public void forget_reset_password(HttpServletRequest request, HttpServletResponse response)
 	{
+		String forgetToken = request.getParameter("forgetToken");
 		String username=request.getParameter("username");
-		String passwordnew=request.getParameter("passwordnew");
+		String passwordnew=request.getParameter("passwordNew");
 		IUserService userService=new UserServiceImpl();
-		ServerResponse se=userService.forget_reset_passwordLogic(username,passwordnew);
+		ServerResponse se=userService.forget_reset_passwordLogic(
+				username,
+				passwordnew,
+				forgetToken.equals(request.getSession().getAttribute("forget_check_answer_token")));
 		Gson gson=new Gson();
 		String json=gson.toJson(se);
 		PrintWriter pw;
@@ -207,13 +212,10 @@ public class UserServlet extends HttpServlet {
 		String json=gson.toJson(se);
 		PrintWriter pw;
 		try {
-			
 			pw = response.getWriter();
 			pw.write(json);
 			pw.close();
-			
 		} catch (IOException e) {
-		
 			e.printStackTrace();
 		}
 	}

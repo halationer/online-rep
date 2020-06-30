@@ -63,7 +63,7 @@
                             </a>
                         </li>
                         <li class='layui-nav-item'>
-                            <a href='#'>
+                            <a href='layui-backgoods.jsp'>
                             	<i class='layui-icon layui-icon-app' style='font-size: 18px;'></i>
                             	<span>&nbsp;&nbsp;&nbsp;商品信息</span>
                             </a>
@@ -95,7 +95,7 @@
 
         <script src="../layui/layui.all.js"></script>
         <script type="text/html" id="tableBtn">
-            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs" lay-event="save">保存</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 	    <script>
@@ -204,16 +204,20 @@
                         limitName: 'pageSize'
                     }
                     ,toolbar: true
-                    ,defaultToolbar: ['filter', 'print', 'exports']
+                    ,defaultToolbar: [{
+                    	title: '添加新用户',
+                    	layEvent: 'add',
+                    	icon: 'layui-icon-addition'
+                    },'filter', 'print', 'exports']
 		    	    ,cols: [[ //表头
 		    	        {field: 'id', title: 'ID', width:60, sort: true, fixed: 'left'},
-		    	        {field: 'username', title: '用户', width:80, sort: true},
-		    	        {field: 'password', title: '密码'},
-		    	        {field: 'phone', title: '电话', width:120},
-		    	        {field: 'email', title: '邮箱', width: 170},
-		    	        {field: 'role', title: '权限', width: 80, sort: true},
-		    	        {field: 'question', title: '密保问题', width: 90},
-		    	        {field: 'answer', title: '密保答案', width: 90},
+		    	        {field: 'username', title: '用户', width:80, sort: true, edit:'text'},
+		    	        {field: 'password', title: '密码', edit:'text'},
+		    	        {field: 'phone', title: '电话', width:120, edit:'text'},
+		    	        {field: 'email', title: '邮箱', width: 170, edit:'text'},
+		    	        {field: 'role', title: '权限', width: 80, sort: true, edit:'text'},
+		    	        {field: 'question', title: '密保问题', width: 90, edit:'text'},
+		    	        {field: 'answer', title: '密保答案', width: 90, edit:'text'},
 		    	        {field: 'createTime', title: '注册时间', width: 200, sort: true},
 		    	        {field: 'updateTime', title: '更新时间', width: 200, sort: true},
                         {title: '操作', fixed: 'right', width: 120, align:'center', toolbar:'#tableBtn'},
@@ -222,7 +226,43 @@
                         if(res.code!==0)
                         	alert(res.msg)
                     }
-		    	});
+		    	})
+		    	
+		    	//监听右部工具条事件
+		    	table.on('tool(user)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+		    		var data = obj.data
+		    		var layEvent = obj.event
+		    		var tr = obj.tr
+		    		console.log(obj)
+
+		    		if(layEvent === 'del'){
+		    			layer.confirm('真的删除行么', function(index){
+		    		    	obj.del()
+		    		    	layer.close(index)
+		    		  	});
+		    		} else if(layEvent === 'save'){
+		    		  	layer.msg('save '+data.id)
+		    		}
+		    	})
+		    	
+		    	//监听单元格编辑——判断是否重名
+		    	table.on('edit(user)', function(obj){
+		    		let val = obj.value
+		    		let field = obj.field
+		    		let data = obj.data
+		    		if(field === 'username')
+		    		{
+		    			layer.msg('check '+ field + ' ' + val)
+		    		}
+		    	})
+		    	
+		    	//添加用户事件
+		    	table.on('toolbar(user)',function(obj){
+		    		if(obj.event === 'add')
+		    		{
+		    			layer.msg('add a user')
+		    		}
+		    	})
             }()
         </script>
     </body>

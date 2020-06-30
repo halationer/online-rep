@@ -10,7 +10,7 @@ public interface IUserService {
 	public ServerResponse get_user_infoLogic(String username) ;
 	public ServerResponse forget_return_questionLogic(String username) ;
 	public ServerResponse forget_check_answerLogic(String username, String question,String answer);
-	public ServerResponse forget_reset_passwordLogic(String username, String passwordnew);
+	public ServerResponse forget_reset_passwordLogic(String username, String passwordnew, boolean c);
 	
 	public ServerResponse login_replace_password(String username, String passwordOld, String passwordNew) ;
 	public ServerResponse login_renew_information(String email,String phone,String question,String answer) ;

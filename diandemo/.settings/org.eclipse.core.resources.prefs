@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/shopping/dao/IUserDao.java=UTF-8
+encoding//src/main/java/com/shopping/dao/impl/OrderDetailDaoImpl.java=UTF-8
+encoding//src/main/java/com/shopping/dao/impl/UserDaoImpl.java=UTF-8
+encoding//src/main/java/com/shopping/service/IOrderTableService.java=UTF-8
+encoding//src/main/java/com/shopping/service/impl/CategoryServiceImpl.java=UTF-8
+encoding//src/main/java/com/shopping/service/impl/GoodsServiceImpl.java=UTF-8
+encoding//src/main/java/com/shopping/service/impl/OrderServiceImpl.java=UTF-8
+encoding//src/main/java/com/shopping/service/impl/OrderTableServiceImpl.java=UTF-8
+encoding//src/main/java/com/shopping/service/impl/ShoppingCartService.java=UTF-8
+encoding//src/main/java/com/shopping/service/impl/UserServiceImpl.java=UTF-8
+encoding//src/main/java/com/shopping/util/DBUtil.java=UTF-8

@@ -1,0 +1,49 @@
+*{margin: 0;padding: 0;text-decoration: none;list-style-type: none;font-family: Times New Roman;}
+
+img{border:none;}
+a{border:none;text-decoration: none;color:#000;}
+.border{border:1px solid red;}
+.center{margin: 0 auto;}
+.w{width: 1200px;margin: 0 auto;}
+.fl{float: left;}
+.fr{float: right;}
+.clear{clear:both;}
+.mt20{margin-top: 20px;}
+.mt10{margin-top: 10px;}
+.ml20{margin-left: 20px;}
+.ml40{margin-left: 40px;}
+.mr40{margin-right: 40px;}
+.mb20{margin-bottom: 20px;}
+.border2{border:2px solid #ff6700;}
+.ft20{font-size: 20px;}
+.ftbc{color: #ff6700;font-weight: bold;}
+.pr{padding-right: 40px;}
+
+.h3{font-size: 22px;font-weight: bold;}
+
+
+
+
+/*peijian*/
+
+.peijian{background: rgb(245,245,245);}
+.peijian .main{height:614px;}
+.peijian .main .content{width: 1200px;height: 300px;}
+.peijian .main .content:nth-of-type(2){margin-top: 14px;}
+.peijian .main .content .remen{width:228px;height: 300px;margin-right: 15px;position:relative;background: #fff;}
+.peijian .main .content .remen:hover{margin-top: -2px;box-shadow: 0px 0px 30px #ccc;}
+.peijian .main .content .remen:nth-of-type(5){margin:0;}
+.peijian .main .content .remen .xinpin span{display: block;margin:0 auto;font-size: 10px;line-height:20px;height: 20px;color:#fff;width: 65px;background: #83c44e;text-align: center;}
+.peijian .main .content .remen .tu a img{margin:-11px 0px 6px 13px;}
+.peijian .main .content .remen .miaoshu{width: 234px;height: 25px;line-height: 25px;text-align: center;overflow: hidden;}
+.peijian .main .content .remen .miaoshu a{color:#000;font-size: 14px;}
+.peijian .main .content .remen .jiage{color:#ff6700;font-size: 14px;text-align:center;width: 234px;height: 25px;line-height: 25px;}
+.peijian .main .content .remen .pingjia{width:234px;height: 15px;line-height: 15px;font-size: 12px;color:#aaa;text-align: center;}
+.peijian .main .content .remen .piao{width: 204px;height: 60px;font-size:12px;padding:10px 0px 0px 30px;background:#ff6700; position: absolute;display: none;}
+.peijian .main .content .remen .piao a{color:#fff;}
+.peijian .main .content .remen .piao span{display: block;margin-top:5px;}
+.peijian .main .content .remen:hover .piao{display: block;margin-top: -40px;}
+.peijian .main .content .remenlast{width:234px;height: 300px;}
+.hongmi:hover{margin-top: -2px;box-shadow: 0px 0px 15px #ccc;}
+.liulangengduo{margin-top: 12px;}
+.liulangengduo:hover{margin-top: 10px;box-shadow: 0px 0px 30px #ccc;}

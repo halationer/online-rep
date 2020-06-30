@@ -104,8 +104,10 @@ public class UserServiceImpl implements IUserService {
 		String forgetToken=UUID.randomUUID().toString();
 		return ServerResponse.serverResponseBySuccess(forgetToken);
 	}
-	public ServerResponse forget_reset_passwordLogic(String username, String passwordnew)
+	public ServerResponse forget_reset_passwordLogic(String username, String passwordnew, boolean c)
 	{
+		if(!c) 
+			return ServerResponse.serverResponseByError("密钥已过期");
 		if(username==null||username.equals(""))
 		{
 			return ServerResponse.serverResponseByError("用户名不能为空");
@@ -115,6 +117,7 @@ public class UserServiceImpl implements IUserService {
 		{
 			return ServerResponse.serverResponseByError("密码不能为空");
 		}
+		
 		if(!userDao.updatePasswordByUsername(username,passwordnew))
 		{
 			return ServerResponse.serverResponseByError("密码修改失败");
@@ -128,16 +131,19 @@ public class UserServiceImpl implements IUserService {
 		{
 			return ServerResponse.serverResponseByError("旧密码不能为空");
 		}
-		else if(passwordOld!=userDao.checkPassword(username)) {//旧的密码输入不正确
+		else if(!passwordOld.equals(userDao.checkPassword(username))) {//旧的密码输入不正确
 			return ServerResponse.serverResponseByError("旧密码不正确");
 		}
 		else if(passwordNew==null||passwordNew.equals(""))
 		{
 			return ServerResponse.serverResponseByError("新密码不能为空");
 		}
-		
-		return ServerResponse.serverResponseBySuccess("密码修改成功");
-		//return null;
+		UserInfo userInfo = new UserInfo();
+		userInfo.setPassword(passwordNew);
+		userInfo.setUsername(username);
+		if(userDao.loginReplacePassword(userInfo))
+			return ServerResponse.serverResponseBySuccess("密码修改成功");
+		else return ServerResponse.serverResponseByError("密码修改失败");
 	}
 	public ServerResponse login_renew_information(String email, String phone, String question, String answer) {
 		// TODO Auto-generated method stub
